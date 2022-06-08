@@ -1,12 +1,14 @@
 package com.company.controller;
 
 import com.company.controller.dto.AccountRequestDTO;
+import com.company.controller.dto.AccountResponseDTO;
+import com.company.entity.Account;
 import com.company.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.security.auth.login.AccountNotFoundException;
+import java.util.List;
 
 @RestController
 public class AccountController {
@@ -26,5 +28,15 @@ public class AccountController {
     @PostMapping("/create")
     public Long create(@RequestBody AccountRequestDTO accountRequestDTO){
         return accountService.createAccount(accountRequestDTO.getName(), accountRequestDTO.getMail(), accountRequestDTO.getAge());
+    }
+
+    @GetMapping("/get/{id}")
+    public AccountResponseDTO getAccountById(@PathVariable Long id) throws AccountNotFoundException {
+        return new AccountResponseDTO(accountService.getAccount(id));
+    }
+
+    @GetMapping("/get")
+    public AccountResponseDTO getAccount(){
+        return new AccountResponseDTO((Account) accountService.getFull());
     }
 }
